@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <style type="text/css">
+            div { border: 1px solid black }
+            .hidden_entry { display: none }
+        </style>
+        <script type="text/javascript">
+            function hideme(me) { me.setAttribute("class", "hidden_entry"); };
+        </script>
+    </head>
+    <body>
+        <div class=hidden_entry>
+            <span>Hello</span>
+        </div>
+        <div onclick="hideme(this);">
+            <span>Bye!</span>
+        </div>
+    </body>
+</html>
