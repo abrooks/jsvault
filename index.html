@@ -1,17 +1,56 @@
 <html>
   <head>
-	<title>jsvault</title>
-	<script src="aes.js"></script>
-	<script src="json2.js"></script>
-	<script src="sample-igv-input.js"></script>
-	<script src="sample-igv.js"></script>
+    <title>jsvault</title>
+    <link type="text/css" href="jsvault.css" rel="stylesheet" />
+    <script src="aes.js"></script>
+    <script src="json2.js"></script>
+    <script src="sample-igv-input.js"></script>
+    <script src="sample-igv.js"></script>
+    <script src="jquery-1.3.2.js"></script>
+    <script src="jsvault.js"></script>
   </head>
   <body>
-	<script>
-	  pw="thisisalongoneofatleast20";
-	  document.write(AesCtr.encrypt(JSON.stringify(jsdb),pw,256));
-	  document.write("<br />");
-	  document.write(AesCtr.decrypt(db,pw,256));
-	</script>
+    <form id="pwform">
+      <p class="biglogo">jsVault</p>
+      <p><input id="pw" type="password" size="30" value="asdfg" /></p>
+      <p><input type="submit" value="Unlock" /></p>
+      <p id="msg"></p>
+    </form>
+
+    <div id="treasure">
+      <table class="search">
+        <tr>
+          <td>
+            Search: <input id="search" size="50" /><br />
+          </td>
+          <td class="lockctrl">
+            Autolock in: <span id="timeleft">TBD</span>
+            <button onclick="lock()">Lock now</button>
+          </td>
+        </tr>
+      </table>
+
+      <table>
+        <tbody>
+          <tr>
+            <th>title</th>
+            <th>username</th>
+            <th>password</th>
+            <th>
+              <button id="newacct" onclick="newacct()">New</button>
+              comments
+            </th>
+          </tr>
+        </tbody>
+        <tbody id="results">
+          <tr>
+            <td><a href="#" class="title"></a></td>
+            <td class="username"></td>
+            <td class="pw"></td>
+            <td class="comments"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>

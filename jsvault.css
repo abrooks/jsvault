@@ -33,3 +33,4 @@ th { text-align: left; }
 .pw { color: #fff; }
 .pw::-moz-selection { color: #33f; background: #33f; }
 .pw::selection { color: #33f; background: #33f; }
+#newacct { float: right; }

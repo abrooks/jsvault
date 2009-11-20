@@ -1,73 +1,69 @@
 //pw="asdfg";
 
-function $(id) {
-  return document.getElementById(id);
-}
+$(function() {
+  $('#pw').focus();
+  $('#msg').hide();
+  var acctrow = $('#results tr').clone();
+  $('#results').empty();
+  $('#pwform').submit(function() {
+    try {
+      //$('pwform').innerHTML = AesCtr.encrypt(JSON.stringify(jsdb),form.pw.value,256);
+      //$('pwform').innerHTML = AesCtr.encrypt(x,form.pw.value,256);
+      //return false;
+      $('#msg').slideUp("fast");
 
-function formloaded() {
-  $('pw').focus();
-}
+      var jsontext = AesCtr.decrypt(db,$('#pw').val(),256);
+      if(/^{.*}$/.exec(jsontext)) {
+        // probably correct passphrase
+        $('#treasure').fadeIn("slow");
+        $('#pwform').fadeOut("slow");
+        $('#search').focus();
 
-function node(tag, text) {
-  var elem = document.createElement(tag);
-  elem.appendChild(document.createTextNode(text));
-  return elem;
-}
+        // Don't clear the passphrase -- we might want it to encrypt something
+        // while we're unlocked.
 
-function dopw(form) {
-  try {
-	//$('pwform').innerHTML = AesCtr.encrypt(JSON.stringify(jsdb),form.pw.value,256);
-	//$('pwform').innerHTML = AesCtr.encrypt(x,form.pw.value,256);
-	//return false;
-	$('msg').innerHTML = "";
-
-	var jsontext = AesCtr.decrypt(db,form.pw.value,256);
-	if(/^{.*}$/.exec(jsontext)) {
-	  // probably correct passphrase
-	  $('treasure').style.display = "block";
-	  $('pwform').style.display = "none";
-	  $('search').focus();
-
-	  // Don't clear the passphrase -- we might want it to encrypt something
-	  // while we're unlocked.
-
-	  var data;
-	  try {
-		data = eval("(" + jsontext + ")");
-	  }
-	  catch(e) {
-		alert(e);
-	  }
-	  var accts = data.accounts;
-	  var acctlen = accts.length;
-	  var tbody = $('results');
-	  var tr, td;
-	  for(var i = 0; i < acctlen; ++i) {
-		tr = document.createElement('tr');
-		tr.appendChild(node('td', accts[i].title));
-		tr.appendChild(node('td', accts[i].username));
-
-		td = node('td', accts[i].password);
-		td.setAttribute('class','pw');
-		tr.appendChild(td);
-
-		tr.appendChild(node('td', accts[i].comments || ""));
-		tbody.appendChild(tr);
-	  }
-	}
-	else {
-	  $('msg').innerHTML = "Incorrect passphrase.  Please try again.";
-	}
-  }
-  finally {
-	return false;
-  }
-}
+        var data;
+        try {
+          data = eval("(" + jsontext + ")");
+        }
+        catch(e) {
+          alert(e);
+        }
+        var accts = data.accounts;
+        var acctlen = accts.length;
+        var tbody = $('#results');
+        $.each(accts, function(i, acct) {
+          var tr = acctrow.clone();
+          $('.title', tr).html(acct.title);
+          $('.title', tr).click(function(){
+	    alert("TBD: Edit " + acct.title);
+	    return false;
+	  });
+          $('.username', tr).html(acct.username);
+          $('.pw', tr).html(acct.password);
+          $('.comments', tr).html(acct.comments);
+          tbody.append(tr);
+        });
+      }
+      else {
+        $('#msg').html("Incorrect passphrase.  Please try again.");
+        $('#msg').slideDown("slow");
+      }
+    }
+    finally {
+      return false;
+    }
+  });
+});
 
 function lock() {
-  $('treasure').style.display = "";
-  $('results').innerHTML = "";
-  $('pw').value = ''; // clear the passphrase
-  $('pwform').style.display = "";
-  $('pw').focus();
+  $('#treasure').hide();
+  $('#results').empty();
+  $('#pw').val(''); // clear the passphrase
+  $('#pwform').fadeIn("slow");
+  $('#pw').focus();
+}
+
+function newacct() {
+  alert("TBD: Edit new account");
 }
