@@ -1,3 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
     <title>jsvault</title>
@@ -17,6 +19,31 @@
       <p id="msg"></p>
     </form>
 
+    <form id="editform">
+      <div class="submitflash"></div>
+      <table class="editform">
+        <tr><td class="label">Title:</td><td><input id="title" /></td></tr>
+        <tr><td class="label">URL:</td><td><input id="url" /></td></tr>
+        <tr><td class="label">Username:</td><td><input id="username" /></td></tr>
+        <tr><td class="label">Password:</td><td><input id="password" /></td></tr>
+        <tr><td class="label">Tags:</td><td><input id="tags" /></td></tr>
+        <tr>
+          <td class="label">Comments:</td>
+          <td><textarea id="comments" rows="4"></textarea></td>
+        </tr>
+        <tbody class="editonly">
+          <tr><td class="label">Created:</td><td id="created"></td></tr>
+          <tr><td class="label">Modified:</td><td id="modified"></td></tr>
+        </tbody>
+      </table>
+      <table class="editbuttons">
+        <tr>
+          <td><input type="submit" value="Okay" /></td>
+          <td><button>Cancel</button></td>
+        </tr>
+      </table>
+    </form>
+
     <div id="treasure">
       <table class="search">
         <tr>
@@ -25,7 +52,7 @@
           </td>
           <td class="lockctrl">
             Autolock in: <span id="timeleft">TBD</span>
-            <button onclick="lock()">Lock now</button>
+            <button id="locknow">Lock now</button>
           </td>
         </tr>
       </table>
@@ -37,7 +64,7 @@
             <th>username</th>
             <th>password</th>
             <th>
-              <button id="newacct" onclick="newacct()">New</button>
+              <button id="newacct">New</button>
               comments
             </th>
           </tr>

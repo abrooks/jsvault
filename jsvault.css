@@ -1,4 +1,5 @@
 body {
+  font-family: Arial, Helvetica, sans-serif;
   background: #fff;
 }
 #pwform {
@@ -10,7 +11,8 @@ body {
   background: #ddd;
   text-align: center;
   padding: 2em;
-  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 4px 4px 5px #888;
+  -webkit-box-shadow: 4px 4px 5px #888;
 }
 #pw {
   width: 100%;
@@ -33,4 +35,33 @@ th { text-align: left; }
 .pw { color: #fff; }
 .pw::-moz-selection { color: #33f; background: #33f; }
 .pw::selection { color: #33f; background: #33f; }
-#newacct { float: right; }
+#newacct { position: absolute; right: 10px; }
+form#editform {
+  display: none;
+  position: absolute;
+  top: 10%;
+  left: 25%;
+  width: 50%;
+  border: 1px #a00 solid;
+  background: #ddd;
+  padding: 1ex;
+  box-shadow: 4px 4px 5px #888;
+  -webkit-box-shadow: 4px 4px 5px #888;
+}
+.submitflash {
+  position: absolute;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  margin: -8px 0 0 -8px;
+}
+.label {
+  text-align: right;
+  width: 5em;
+  vertical-align: top;
+}
+table.editform input { width: 100%; }
+table.editform textarea { width: 100%; }
+.editbuttons td { text-align: center; }
+textarea { font-family: Arial, Helvetica, sans-serif; }
+#created, #modified { font-size: 70%; }
