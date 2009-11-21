@@ -2,7 +2,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background: #fff;
 }
-#pwform {
+#vpwform {
   position: absolute;
   top: 30%;
   left: 25%;
@@ -13,9 +13,6 @@ body {
   padding: 2em;
   box-shadow: 4px 4px 5px #888;
   -webkit-box-shadow: 4px 4px 5px #888;
-}
-#pw {
-  width: 100%;
 }
 .biglogo {
   font-size: 300%;

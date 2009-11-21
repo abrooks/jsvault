@@ -1,11 +1,9 @@
 aes.js from http://www.movable-type.co.uk/scripts/aes.html
+sha1.js from http://www.movable-type.co.uk/scripts/sha1.html
 json2.js from http://json.org/json2.js
 jquery-1.3.2 from http://jquery.com/
 
 TODO:
-- server for encryped db blocks (versioned?)
-- how/when to specify username (and [another] password??) to server so it can
-  choose appropriate db block (for read and write).
 - import data from userpass
 - tweak UI for iPhone
 - timed autolock (reset on any activity)
@@ -33,3 +31,8 @@ TODO:
   - use standalone js to do encrypt/decrypt
   - fetch/save data via http?
   - fetch/save data directly from data files?
+- delete account
+- account revisions within db?
+- db revisions on server?
+- use hash of vpw for aes key, hash of that hash for server key
+- use number for date in db, not string
