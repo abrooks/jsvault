@@ -22,15 +22,25 @@ else:
         db.close()
         print "OK"
   elif cmd == "create":
-    if not re.match("\w+-\w+\.txt$", argstr):
+    createargs = re.match("(\w+)-\w+\.txt$", argstr)
+    if not createargs:
       print "Invalid database name"
     else:
       if os.path.exists("db/" + argstr):
         print "You already have a db with that password"
       else:
-        db = open("db/" + argstr, "w")
-        db.write(sys.stdin.read())
-        db.close()
-        print "OK"
+        user = createargs.group(1)
+        dupuser = False
+        for file in os.listdir('db'):
+          if file.startswith(user):
+            dupuser = True
+            break
+        if dupuser:
+          print "That username already exists. Please try again."
+        else:
+          db = open("db/" + argstr, "w")
+          db.write(sys.stdin.read())
+          db.close()
+          print "OK"
 
 sys.stdout.flush()

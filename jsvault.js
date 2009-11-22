@@ -119,7 +119,7 @@ $(function() {
           // Success
         }
         else {
-          alert("Application error saving db:" + data);
+          alert(data || "Unknown application error saving db");
         }
       }
     });
@@ -198,7 +198,7 @@ $(function() {
                 $('#newacct').focus();
               }
               else {
-                pwerr("Application error creating db:" + data);
+                pwerr(data || "Unknown application error creating db");
               }
             }
           });
