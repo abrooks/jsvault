@@ -4,7 +4,7 @@ body {
 }
 #vpwform {
   position: absolute;
-  top: 30%;
+  top: 20%;
   left: 25%;
   width: 50%;
   border: 1px #a00 solid;
@@ -20,8 +20,20 @@ body {
   font-style: italic;
   margin: 0;
 }
+.vpwconf {
+  display: none;
+}
 #msg {
   color: #a00;
+}
+#newuser {
+  float: right;
+  font-size: small;
+}
+#login {
+  display: none;
+  float: left;
+  font-size: small;
 }
 
 table { width: 100%; }

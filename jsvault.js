@@ -31,7 +31,7 @@ function dbfilename() {
   return $('#vuser').val() + "-" + sha1Hash($('#vpw').val()) + ".txt";
 }
 
-function cleareditform(){ 
+function cleareditform() { 
   $('#title').val('');
   $('#url').val('');
   $('#username').val('');
@@ -40,9 +40,18 @@ function cleareditform(){
   $('#comments').val('');
 }
 
+function pwerr(html) {
+  $('#msg').slideUp("fast", function() {
+    $('#msg').html(html);
+    $('#msg').slideDown("slow");
+  });
+}
+
 $(function() {
   $('#vpw').focus();
   $('#msg').hide();
+  $('.vpwconf').hide();
+  $('#login').hide();
   var acctrow = $('#results tr').clone();
   $('#results').empty();
 
@@ -98,7 +107,7 @@ $(function() {
       });
 
     $.ajax({
-      url: "save.cgi/" + dbfilename(),
+      url: "save.cgi/replace/" + dbfilename(),
       type: 'POST',
       contentType: "text/plain",
       data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
@@ -125,49 +134,95 @@ $(function() {
 
   $('#vpwform').submit(function() {
     try {
-      $('#msg').slideUp("fast");
+      if($('#vpwform-submit').val() == "Unlock") {
+        // Unlock / login
+        $.ajax({
+          url: "db/" + dbfilename(),
+          type: 'GET',
+          error: function(req, stat, err) {
+            pwerr("Incorrect username or passphrase.  Please try again.");
+          },
+          success: function(aesdata, stat) {
+            var jsontext = AesCtr.decrypt($.trim(aesdata),$('#vpw').val(),256);
+            if(/^{.*}$/.exec(jsontext)) {
+              // probably correct passphrase
+              // Don't clear the passphrase -- we might want it to encrypt
+              // something while we're unlocked.
 
-      $.ajax({
-        url: "db/" + dbfilename(),
-        type: 'GET',
-        error: function(req, stat, err) {
-          $('#msg').html("Incorrect username or passphrase.  Please try again.");
-          $('#msg').slideDown("slow");
-        },
-        success: function(aesdata, stat) {
-          var jsontext = AesCtr.decrypt($.trim(aesdata),$('#vpw').val(),256);
-          if(/^{.*}$/.exec(jsontext)) {
-            // probably correct passphrase
-            $('#treasure').fadeIn("fast");
-            $('#vpwform').fadeOut("slow");
-            $('#search').focus();
+              try {
+                data = eval("(" + jsontext + ")");
+              }
+              catch(e) {
+                pwerr("Possible database corruption. #E1");
+                return;
+              }
+              $('#msg').slideUp("fast");
+              $('#treasure').fadeIn("fast");
+              $('#vpwform').fadeOut("slow");
+              $('#search').focus();
 
-            // Don't clear the passphrase -- we might want it to encrypt
-            // something while we're unlocked.
-
-            try {
-              data = eval("(" + jsontext + ")");
+              var accts = data.accounts;
+              var acctlen = accts.length;
+              var tbody = $('#results');
+              $.each(accts, function(i, acct) {
+                tbody.append(makeacctrow(acct, i));
+              });
             }
-            catch(e) {
-              $('#msg').html("Possible database corruption. #E1");
-              $('#msg').slideDown("slow");
+            else {
+              pwerr("Possible database corruption. #E2");
             }
-            var accts = data.accounts;
-            var acctlen = accts.length;
-            var tbody = $('#results');
-            $.each(accts, function(i, acct) {
-              tbody.append(makeacctrow(acct, i));
-            });
           }
-          else {
-            $('#msg').html("Possible database corruption. #E2");
-            $('#msg').slideDown("slow");
-          }
+        });
+      }
+      else {
+        // Create new user
+        if($('#vpw').val() != $('#vpwconf').val()) {
+          pwerr("Passwords don't match.  Please try again.");
         }
-      });
+        else {
+          data = {tags: [], accounts: []};
+          $.ajax({
+            url: "save.cgi/create/" + dbfilename(),
+            type: 'POST',
+            contentType: "text/plain",
+            data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
+            error: function(req, stat, err) {
+              pwerr("HTTP error creating db: " + stat + ", " + err );
+            },
+            success: function(data, stat) {
+              if($.trim(data) == "OK") {
+                // Success
+                $('#msg').slideUp("fast");
+                $('#treasure').fadeIn("fast");
+                $('#vpwform').fadeOut("slow");
+                $('#newacct').focus();
+              }
+              else {
+                pwerr("Application error creating db:" + data);
+              }
+            }
+          });
+        }
+      }
     }
     finally {
       return false;
     }
+  });
+
+  $('#newuser').click(function() {
+    $('.vpwconf').slideDown('fast');
+    $('#vpwform-submit').val('Create User');
+    $('#newuser').fadeOut('fast');
+    $('#login').fadeIn('fast');
+    return false;
+  });
+
+  $('#login').click(function() {
+    $('.vpwconf').slideUp('fast');
+    $('#vpwform-submit').val('Unlock');
+    $('#newuser').fadeIn('fast');
+    $('#login').fadeOut('fast');
+    return false;
   });
 });

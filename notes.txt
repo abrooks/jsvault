@@ -11,7 +11,7 @@ TODO:
 - lock hotkey
 - search ("filter?")
 - search by tag (autocomplete? list? tag cloud?)
-- change passphrase
+- change passphrase / username
 - passphrase in cookie
 - password generator (dice!)
 - improve (automate?) selection/copying of password field in search results
@@ -36,3 +36,4 @@ TODO:
 - db revisions on server?
 - use hash of vpw for aes key, hash of that hash for server key
 - use number for date in db, not string
+- let user provide password hint

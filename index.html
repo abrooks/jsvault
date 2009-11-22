@@ -15,8 +15,15 @@
       <p class="biglogo">jsVault</p>
       <p>Username: <input id="vuser" size="30" value="chouser" /></p>
       <p>Password: <input id="vpw" type="password" size="30" value="asdfg" /></p>
-      <p><input type="submit" value="Unlock" /></p>
-      <p id="msg"></p>
+      <p class="vpwconf">
+        Confirm Password: <input id="vpwconf" type="password" size="30" />
+      </p>
+      <p>
+        <input id="vpwform-submit" type="submit" value="Unlock" />
+        <p id="msg"></p>
+        <a id="login" href="#">Login</a>
+        <a id="newuser" href="#">Create new user</a>
+      </p>
     </form>
 
     <form id="editform">
