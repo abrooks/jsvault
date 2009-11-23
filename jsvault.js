@@ -89,7 +89,13 @@ $(function() {
       modified: time
     };
     if(editingIndex >= 0) {
-      $.extend(data.accounts[editingIndex], newacct);
+      var oldacct = data.accounts[editingIndex];
+      var oldcopy = $.extend({}, oldacct);
+      delete oldcopy.created;
+      delete oldcopy.history;
+      $.extend(oldacct, newacct);
+      if(! oldacct.history) oldacct.history = [];
+      oldacct.history[oldacct.history.length] = oldcopy;
       var oldtr = $($('#results > tr')[editingIndex]);
       oldtr.after(makeacctrow(newacct, editingIndex));
       oldtr.remove();
