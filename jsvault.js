@@ -19,8 +19,8 @@ function editacct(n) {
     $('#password').val(acct.password || "");
     $('#tags').val(acct.tags.join(", ") || "");
     $('#comments').val(acct.comments || "");
-    $('#created').html(acct.created || "");
-    $('#modified').html(acct.modified || "");
+    $('#created').html(acct.created ? "" + new Date(acct.created) : "");
+    $('#modified').html(acct.modified ? "" + new Date(acct.modified) : "");
   }
   else {
     $('#title').focus();
@@ -78,7 +78,7 @@ $(function() {
 
   $('#editform').submit(function(){
     // ok: save
-    var date = "" + (new Date());
+    var time = (new Date()).getTime();
     var newacct = {
       title: $('#title').val(),
       url: $('#url').val(),
@@ -86,7 +86,7 @@ $(function() {
       password: $('#password').val(),
       tags: $.trim($('#tags').val()).split(/ *, */),
       comments: $('#comments').val(),
-      modified: date
+      modified: time
     };
     if(editingIndex >= 0) {
       $.extend(data.accounts[editingIndex], newacct);
@@ -95,7 +95,7 @@ $(function() {
       oldtr.remove();
     }
     else {
-      newacct.created = date;
+      newacct.created = time;
       editingIndex = data.accounts.length;
       data.accounts[editingIndex] = newacct;
       $('#results').append(makeacctrow(newacct, editingIndex));
@@ -107,7 +107,8 @@ $(function() {
       });
 
     $.ajax({
-      url: "save.cgi/replace/" + dbfilename(),
+      url: "save.cgi/replace/" + dbfilename() + "?" + (new Date()).getTime(),
+      cache: false,
       type: 'POST',
       contentType: "text/plain",
       data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
@@ -138,6 +139,7 @@ $(function() {
         // Unlock / login
         $.ajax({
           url: "db/" + dbfilename(),
+          cache: false, // XXX this probably prevents us from working offline
           type: 'GET',
           error: function(req, stat, err) {
             pwerr("Incorrect username or passphrase.  Please try again.");
@@ -183,6 +185,7 @@ $(function() {
           data = {tags: [], accounts: []};
           $.ajax({
             url: "save.cgi/create/" + dbfilename(),
+            cache: false,
             type: 'POST',
             contentType: "text/plain",
             data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),

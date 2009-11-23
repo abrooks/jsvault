@@ -4,16 +4,18 @@ json2.js from http://json.org/json2.js
 jquery-1.3.2 from http://jquery.com/
 
 TODO:
+- account revisions within db?
 - import data from userpass
-- tweak UI for iPhone
+- provide "reload data" button or some such compromise for cached/uptodate data
 - timed autolock (reset on any activity)
-- lock must work while editing: button and hotkey work, edit data gets cleared
-- lock hotkey
 - search ("filter?")
-- search by tag (autocomplete? list? tag cloud?)
-- change passphrase / username
 - passphrase in cookie
 - password generator (dice!)
+- tweak UI for iPhone
+- lock must work while editing: button and hotkey work, edit data gets cleared
+- lock hotkey
+- search by tag (autocomplete? list? tag cloud?)
+- change passphrase / username
 - improve (automate?) selection/copying of password field in search results
 - <esc> should close edit window
 - configuration options:
@@ -32,8 +34,6 @@ TODO:
   - fetch/save data via http?
   - fetch/save data directly from data files?
 - delete account
-- account revisions within db?
 - db revisions on server?
 - use hash of vpw for aes key, hash of that hash for server key
-- use number for date in db, not string
 - let user provide password hint
