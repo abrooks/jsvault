@@ -2,6 +2,7 @@
 var data, editingIndex;
 
 function editacct(n) {
+  $('#menu').slideUp('fast');
   editingIndex = n;
   if(n >= 0) {
     $('.editonly').show();
@@ -65,7 +66,7 @@ $(function() {
     return tr;
   }
 
-  $('#locknow').click(function() {
+  $('.locknow').click(function() {
     $('#treasure').hide();
     data = null;
     $('#results').empty();
@@ -74,7 +75,17 @@ $(function() {
     $('#vpw').focus();
   });
 
-  $('#newacct').click(editacct);
+  var menu = $('#menu').hide();
+  $('#menubtn').click(function(){
+    if(menu.css('display') == 'none') {
+      menu.slideDown('fast');
+    }
+    else {
+      menu.slideUp('fast');
+    }
+  });
+
+  $('.newacct').click(editacct);
 
   $('#editform').submit(function(){
     // ok: save

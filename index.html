@@ -54,12 +54,31 @@
     <div id="treasure">
       <table class="search">
         <tr>
-          <td>
-            Search: <input id="search" size="50" /><br />
+          <td class="menugroup">
+            <div class="menugroup-pad"></div>
+            <div class="menugroup">
+              <table class="menubtn">
+                <tr>
+                  <td class="menubtn"><button id="menubtn">jsVault</button></td>
+                  <td class="newacct"><button class="newacct">+</button></td>
+                </tr>
+              </table>
+              <div id="menu">
+                <button class="newacct">New entry</button>
+                <button class="locknow">Lock now</button>
+                <!--
+                <button id="import">Import entries</button>
+                <button>Change passphrase</button>
+                <button>Configuration</button>
+                -->
+              </div>
+            </div>
           </td>
+          <td width="0">Search:</td>
+          <td class="search"><input id="search" size="50" /></td>
           <td class="lockctrl">
             Autolock in: <span id="timeleft">TBD</span>
-            <button id="locknow">Lock now</button>
+            <button class="locknow">Lock now</button>
           </td>
         </tr>
       </table>
@@ -71,7 +90,6 @@
             <th>username</th>
             <th>password</th>
             <th>
-              <button id="newacct">New</button>
               comments
             </th>
           </tr>
