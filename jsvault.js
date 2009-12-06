@@ -144,9 +144,37 @@ $(function() {
 
     return false;
   });
-  $('.editbuttons button').click(function(){
+  $('#editform button').click(function(){
     // cancel:
     $('#editform').slideUp('fast', cleareditform);
+    return false;
+  });
+
+  $('.import').click(function() {
+    $('#importform').slideDown('fast');
+    $('#importform .submitflash').fadeOut("fast");
+    $('#menu').slideUp('fast');
+  });
+  function clearimport() {
+    $('#import').val('');
+  };
+  $('#importform button').click(function(){
+    // cancel:
+    $('#importform').slideUp('fast', clearimport);
+    return false;
+  });
+  $('#importform').submit(function(){
+    // ok: save
+    $('#importform .submitflash').fadeIn(50,
+      function(){$('#importform .submitflash').fadeOut(200,
+        function(){$('#importform').slideUp('fast', clearimport);});
+      });
+
+  $.each($('#import').val().split(/\n/), function(i, line) {
+    var fields = line.split(/\t/);
+    // XXX work here
+  });
+
     return false;
   });
 
