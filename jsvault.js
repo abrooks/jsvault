@@ -1,5 +1,6 @@
 //vpw="asdfg";
 var data, editingIndex;
+var cgi = "cgi-bin/save.cgi";
 
 function editacct(n) {
   $('#menu').slideUp('fast');
@@ -124,7 +125,7 @@ $(function() {
       });
 
     $.ajax({
-      url: "save.cgi/replace/" + dbfilename() + "?" + (new Date()).getTime(),
+      url: cgi + "/replace/" + dbfilename() + "?" + (new Date()).getTime(),
       cache: false,
       type: 'POST',
       contentType: "text/plain",
@@ -229,7 +230,7 @@ $(function() {
         else {
           data = {tags: [], accounts: []};
           $.ajax({
-            url: "save.cgi/create/" + dbfilename(),
+            url: cgi + "/create/" + dbfilename(),
             cache: false,
             type: 'POST',
             contentType: "text/plain",
