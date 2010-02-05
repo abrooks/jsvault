@@ -87,6 +87,35 @@ $(function() {
   });
 
   $('.newacct').click(editacct);
+  $('.delacct').click(function(){
+          var n = editingIndex;
+          var txt = prompt("Enter 'DELETE' to delete account '"+data.accounts[n].title+"':")
+          if(txt == "DELETE") {
+            data.accounts.splice(n,1);
+            oldtr = $($('#results > tr')[n]);
+            oldtr.remove();
+
+            // Copied from below... TODO: move both into a function
+            $.ajax({
+                    url: cgi + "/replace/" + dbfilename() + "?" + (new Date()).getTime(),
+                    cache: false,
+                    type: 'POST',
+                    contentType: "text/plain",
+                    data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
+                    error: function(req, stat, err) {
+                    alert("HTTP error saving db: " + stat + ", " + err );
+                },
+                success: function(data, stat) {
+                    if($.trim(data) == "OK") {
+                    // Success
+                    }
+                    else {
+                        alert(data || "Unknown application error saving db");
+                    }
+                }
+                });
+          }
+        });
 
   $('#editform').submit(function(){
     // ok: save
