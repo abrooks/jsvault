@@ -32,7 +32,7 @@ TODO:
   - use standalone js to do encrypt/decrypt
   - fetch/save data via http?
   - fetch/save data directly from data files?
-- delete account
 - db revisions on server?
 - use hash of vpw for aes key, hash of that hash for server key
 - let user provide password hint
+- test delete account functionallity
