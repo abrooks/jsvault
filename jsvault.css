@@ -56,54 +56,10 @@ td.menugroup {
   width: 10em;
   vertical-align: top;
 }
-.menugroup-pad {
-  width: 11em;
-  height: 2px;
-}
 div.menugroup {
   width: 10em;
   position: absolute;
 }
-table.menubtn {
-  width: 100%;
-  border-collapse: collapse;
-}
-td.menubtn, td.newacct {
-  padding: 0;
-}
-td.menubtn {
-  width: 100%;
-}
-#menubtn {
-  width: 100%;
-  margin: 0;
-  text-align: left;
-  font-family: Times New Roman, serif;
-  font-style: italic;
-}
-button.newacct {
-  margin: 0;
-}
-#menu {
-  border: 1px #000 solid;
-  border-top: none;
-  background: #eee;
-  box-shadow: 4px 4px 5px #888;
-  -webkit-box-shadow: 2px 2px 4px #aaa;
-}
-#menu button {
-  display: block;
-  padding: 0.4ex;
-  margin: 0;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-}
-#menu button:focus, #menu button:hover {
-  background: #fff;
-}
-
 .dialog {
   display: none;
   position: absolute;

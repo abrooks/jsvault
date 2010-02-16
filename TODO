@@ -1,0 +1,6 @@
+- Fix password reveal when focus leaves the document in FireFox.
+  Possibly use range object with selectNodeContents():
+
+    http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113/ranges.html
+
+- Fix overlap of buttons and "Search:" label
