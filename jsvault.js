@@ -48,7 +48,7 @@ function pwerr(html) {
   });
 }
 
-function post_db(cmd, data, handler) {
+function post_db(ctx, cmd, data, handler) {
   var cache_defeat = (new Date()).getTime()
   $.ajax({
           url: cgi+'/'+cmd+'/'+dbfilename()+'?'+cache_defeat,
@@ -58,7 +58,7 @@ function post_db(cmd, data, handler) {
           data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
           error:
             function(req, stat, err) {
-              alert("HTTP error during '"+cmd+"' operation on db: "+stat+", "+err);
+              alert("HTTP error during '"+ctx+':'+cmd+"' operation on db: "+stat+", "+err);
             },
           success:
             function(retdata, stat) {
@@ -70,7 +70,7 @@ function post_db(cmd, data, handler) {
                 if(handler.failure) {
                   handler.failure(retdata);
                 } else {
-                  alert(retdata || "Unknown application error during '"+cmd+"' operation on db.");
+                  alert(retdata || "Unknown application error during '"+ctx+':'+cmd+"' operation on db.");
                 }
               }
             }
@@ -168,7 +168,7 @@ $(function() {
             data.accounts.splice(n,1);
             oldtr = $($('#results > tr')[n]);
             oldtr.remove();
-            post_db('replace', data, {})
+            post_db('delacct', 'replace', data, {})
           }
         });
 
@@ -207,7 +207,7 @@ $(function() {
         function(){$('#editform').slideUp('fast', cleareditform);});
       });
 
-    post_db('replace', data, {})
+    post_db('editform', 'replace', data, {})
 
     return false;
   });
@@ -260,7 +260,7 @@ $(function() {
           pwerr("Passwords don't match.  Please try again.");
         } else {
           data = {tags: [], accounts: []};
-          post_db('create', data,
+          post_db('vpwform', 'create', data,
                     {success: function() {
                         $('#msg').slideUp("fast");
                         $('#treasure').fadeIn("fast");
