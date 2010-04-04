@@ -1,6 +1,5 @@
 // vim: sw=2
 
-//vpw="asdfg";
 var data, editingIndex;
 var cgi = "cgi-bin/save.cgi";
 
@@ -50,10 +49,15 @@ function pwerr(html) {
 }
 
 $(function() {
+
   $('#vpw').focus();
+
   $('#msg').hide();
+
   $('.vpwconf').hide();
+
   $('#login').hide();
+
   var acctrow = $('#results tr').clone();
   $('#results').empty();
 
@@ -86,6 +90,7 @@ $(function() {
   });
 
   $('.newacct').click(editacct);
+
   $('.delacct').click(function(){
           var n = editingIndex;
           var txt = prompt("Enter 'DELETE' to delete account '"+data.accounts[n].title+"':")
@@ -170,6 +175,7 @@ $(function() {
 
     return false;
   });
+
   $('#editform button').click(function(){
     // cancel:
     $('#editform').slideUp('fast', cleareditform);
@@ -181,14 +187,17 @@ $(function() {
     $('#importform .submitflash').fadeOut("fast");
     $('#menu').slideUp('fast');
   });
+
   function clearimport() {
     $('#import').val('');
   };
+
   $('#importform button').click(function(){
     // cancel:
     $('#importform').slideUp('fast', clearimport);
     return false;
   });
+
   $('#importform').submit(function(){
     // ok: save
     $('#importform .submitflash').fadeIn(50,
@@ -196,10 +205,10 @@ $(function() {
         function(){$('#importform').slideUp('fast', clearimport);});
       });
 
-  $.each($('#import').val().split(/\n/), function(i, line) {
-    var fields = line.split(/\t/);
-    // XXX work here
-  });
+    $.each($('#import').val().split(/\n/), function(i, line) {
+      var fields = line.split(/\t/);
+      // XXX work here
+    });
 
     return false;
   });
