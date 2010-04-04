@@ -1,7 +1,12 @@
 #!/usr/bin/python
 
+import os
+
 from BaseHTTPServer import HTTPServer
 from CGIHTTPServer import CGIHTTPRequestHandler
-server = HTTPServer(('',8080), CGIHTTPRequestHandler)
+
+port = os.environ.get('JSVAULT_PORT', 8080)
+print 'Running server on http://localhost:%s/' % port
+server = HTTPServer(('',port), CGIHTTPRequestHandler)
 server.serve_forever()
 
