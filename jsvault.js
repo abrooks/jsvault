@@ -1,3 +1,5 @@
+// vim: sw=2
+
 //vpw="asdfg";
 var data, editingIndex;
 var cgi = "cgi-bin/save.cgi";
@@ -7,8 +9,7 @@ function editacct(n) {
   editingIndex = n;
   if(n >= 0) {
     $('.editonly').show();
-  }
-  else {
+  } else {
     $('.editonly').hide();
   }
   $('#editform').slideDown('fast');
@@ -23,8 +24,7 @@ function editacct(n) {
     $('#comments').val(acct.comments || "");
     $('#created').html(acct.created ? "" + new Date(acct.created) : "");
     $('#modified').html(acct.modified ? "" + new Date(acct.modified) : "");
-  }
-  else {
+  } else {
     $('#title').focus();
   }
 }
@@ -80,8 +80,7 @@ $(function() {
   $('#menubtn').click(function(){
     if(menu.css('display') == 'none') {
       menu.slideDown('fast');
-    }
-    else {
+    } else {
       menu.slideUp('fast');
     }
   });
@@ -108,8 +107,7 @@ $(function() {
                 success: function(data, stat) {
                     if($.trim(data) == "OK") {
                     // Success
-                    }
-                    else {
+                    } else {
                         alert(data || "Unknown application error saving db");
                     }
                 }
@@ -140,8 +138,7 @@ $(function() {
       var oldtr = $($('#results > tr')[editingIndex]);
       oldtr.after(makeacctrow(newacct, editingIndex));
       oldtr.remove();
-    }
-    else {
+    } else {
       newacct.created = time;
       editingIndex = data.accounts.length;
       data.accounts[editingIndex] = newacct;
@@ -165,8 +162,7 @@ $(function() {
       success: function(data, stat) {
         if($.trim(data) == "OK") {
           // Success
-        }
-        else {
+        } else {
           alert(data || "Unknown application error saving db");
         }
       }
@@ -244,19 +240,16 @@ $(function() {
               $.each(accts, function(i, acct) {
                 tbody.append(makeacctrow(acct, i));
               });
-            }
-            else {
+            } else {
               pwerr("Possible database corruption. #E2");
             }
           }
         });
-      }
-      else {
+      } else {
         // Create new user
         if($('#vpw').val() != $('#vpwconf').val()) {
           pwerr("Passwords don't match.  Please try again.");
-        }
-        else {
+        } else {
           data = {tags: [], accounts: []};
           $.ajax({
             url: cgi + "/create/" + dbfilename(),
@@ -274,16 +267,14 @@ $(function() {
                 $('#treasure').fadeIn("fast");
                 $('#vpwform').fadeOut("slow");
                 $('#newacct').focus();
-              }
-              else {
+              } else {
                 pwerr(data || "Unknown application error creating db");
               }
             }
           });
         }
       }
-    }
-    finally {
+    } finally {
       return false;
     }
   });
