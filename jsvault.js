@@ -48,6 +48,76 @@ function pwerr(html) {
   });
 }
 
+function post_db(cmd, data, handler) {
+  var cache_defeat = (new Date()).getTime()
+  $.ajax({
+          url: cgi+'/'+cmd+'/'+dbfilename()+'?'+cache_defeat,
+          cache: false,
+          type: 'POST',
+          contentType: 'text/plain',
+          data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
+          error:
+            function(req, stat, err) {
+              alert("HTTP error during '"+cmd+"' operation on db: "+stat+", "+err);
+            },
+          success:
+            function(retdata, stat) {
+              if($.trim(retdata) == "OK") {
+                if(handler.success) {
+                  handler.success();
+                }
+              } else {
+                if(handler.failure) {
+                  handler.failure(retdata);
+                } else {
+                  alert(retdata || "Unknown application error during '"+cmd+"' operation on db.");
+                }
+              }
+            }
+  });
+}
+
+function get_db(acctfn) {
+  $.ajax({
+          url: "db/" + dbfilename(),
+          cache: false, // XXX this probably prevents us from working offline
+          type: 'GET',
+          error:
+            function(req, stat, err) {
+              pwerr("Incorrect username or passphrase.  Please try again.");
+            },
+          success:
+            function(aesdata, stat) {
+              var jsontext = AesCtr.decrypt($.trim(aesdata),$('#vpw').val(),256);
+              if(/^{.*}$/.exec(jsontext)) {
+                // probably correct passphrase
+                // Don't clear the passphrase -- we might want it to encrypt
+                // something while we're unlocked.
+
+                try {
+                  data = eval("(" + jsontext + ")");
+                } catch(e) {
+                  pwerr("Possible database corruption. #E1");
+                  return;
+                }
+                $('#msg').slideUp("fast");
+                $('#treasure').fadeIn("fast");
+                $('#vpwform').fadeOut("slow");
+                $('#search').focus();
+
+                var accts = data.accounts;
+                var acctlen = accts.length;
+                var tbody = $('#results');
+                $.each(accts, function(i, acct) {
+                  tbody.append(acctfn(acct, i));
+                });
+              } else {
+                pwerr("Possible database corruption. #E2");
+              }
+            }
+  });
+}
+
 $(function() {
 
   $('#vpw').focus();
@@ -98,25 +168,7 @@ $(function() {
             data.accounts.splice(n,1);
             oldtr = $($('#results > tr')[n]);
             oldtr.remove();
-
-            // Copied from below... TODO: move both into a function
-            $.ajax({
-                    url: cgi + "/replace/" + dbfilename() + "?" + (new Date()).getTime(),
-                    cache: false,
-                    type: 'POST',
-                    contentType: "text/plain",
-                    data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
-                    error: function(req, stat, err) {
-                    alert("HTTP error saving db: " + stat + ", " + err );
-                },
-                success: function(data, stat) {
-                    if($.trim(data) == "OK") {
-                    // Success
-                    } else {
-                        alert(data || "Unknown application error saving db");
-                    }
-                }
-                });
+            post_db('replace', data, {})
           }
         });
 
@@ -155,23 +207,7 @@ $(function() {
         function(){$('#editform').slideUp('fast', cleareditform);});
       });
 
-    $.ajax({
-      url: cgi + "/replace/" + dbfilename() + "?" + (new Date()).getTime(),
-      cache: false,
-      type: 'POST',
-      contentType: "text/plain",
-      data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
-      error: function(req, stat, err) {
-        alert("HTTP error saving db: " + stat + ", " + err );
-      },
-      success: function(data, stat) {
-        if($.trim(data) == "OK") {
-          // Success
-        } else {
-          alert(data || "Unknown application error saving db");
-        }
-      }
-    });
+    post_db('replace', data, {})
 
     return false;
   });
@@ -217,70 +253,20 @@ $(function() {
     try {
       if($('#vpwform-submit').val() == "Unlock") {
         // Unlock / login
-        $.ajax({
-          url: "db/" + dbfilename(),
-          cache: false, // XXX this probably prevents us from working offline
-          type: 'GET',
-          error: function(req, stat, err) {
-            pwerr("Incorrect username or passphrase.  Please try again.");
-          },
-          success: function(aesdata, stat) {
-            var jsontext = AesCtr.decrypt($.trim(aesdata),$('#vpw').val(),256);
-            if(/^{.*}$/.exec(jsontext)) {
-              // probably correct passphrase
-              // Don't clear the passphrase -- we might want it to encrypt
-              // something while we're unlocked.
-
-              try {
-                data = eval("(" + jsontext + ")");
-              }
-              catch(e) {
-                pwerr("Possible database corruption. #E1");
-                return;
-              }
-              $('#msg').slideUp("fast");
-              $('#treasure').fadeIn("fast");
-              $('#vpwform').fadeOut("slow");
-              $('#search').focus();
-
-              var accts = data.accounts;
-              var acctlen = accts.length;
-              var tbody = $('#results');
-              $.each(accts, function(i, acct) {
-                tbody.append(makeacctrow(acct, i));
-              });
-            } else {
-              pwerr("Possible database corruption. #E2");
-            }
-          }
-        });
+        get_db(makeacctrow)
       } else {
         // Create new user
         if($('#vpw').val() != $('#vpwconf').val()) {
           pwerr("Passwords don't match.  Please try again.");
         } else {
           data = {tags: [], accounts: []};
-          $.ajax({
-            url: cgi + "/create/" + dbfilename(),
-            cache: false,
-            type: 'POST',
-            contentType: "text/plain",
-            data: AesCtr.encrypt(JSON.stringify(data),$('#vpw').val(),256),
-            error: function(req, stat, err) {
-              pwerr("HTTP error creating db: " + stat + ", " + err );
-            },
-            success: function(data, stat) {
-              if($.trim(data) == "OK") {
-                // Success
-                $('#msg').slideUp("fast");
-                $('#treasure').fadeIn("fast");
-                $('#vpwform').fadeOut("slow");
-                $('#newacct').focus();
-              } else {
-                pwerr(data || "Unknown application error creating db");
-              }
-            }
-          });
+          post_db('create', data,
+                    {success: function() {
+                        $('#msg').slideUp("fast");
+                        $('#treasure').fadeIn("fast");
+                        $('#vpwform').fadeOut("slow");
+                        $('#newacct').focus();
+                    }})
         }
       }
     } finally {
