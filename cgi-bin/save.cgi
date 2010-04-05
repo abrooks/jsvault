@@ -6,6 +6,7 @@ import re
 print "Content-type: text/plain\n\n"
 sys.stderr = sys.stdout
 pathparts = re.match("/(\w+)/(.*)", os.environ['PATH_INFO'])
+clen = int(os.environ['CONTENT_LENGTH'])
 if not pathparts:
   print "Invalid server parameters"
 else:
@@ -18,7 +19,7 @@ else:
         print "No existing db", argstr, "to replace"
       else:
         db = open("db/" + argstr, "w")
-        db.write(sys.stdin.read())
+        db.write(sys.stdin.read(clen))
         db.close()
         print "OK"
   elif cmd == "create":
@@ -39,7 +40,7 @@ else:
           print "That username already exists. Please try again."
         else:
           db = open("db/" + argstr, "w")
-          db.write(sys.stdin.read())
+          db.write(sys.stdin.read(clen))
           db.close()
           print "OK"
 
